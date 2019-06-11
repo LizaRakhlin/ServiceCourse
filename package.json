@@ -11,6 +11,7 @@
     "@types/mocha": "^5.2.7",
     "adal-node": "^0.1.28",
     "dotenv": "^8.0.0",
+    "sinon": "^7.3.2",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
   },
