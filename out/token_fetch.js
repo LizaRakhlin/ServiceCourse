@@ -12,6 +12,7 @@ const dotenv = require("dotenv");
 const utils = require("util");
 dotenv.config();
 const fetch = require("node-fetch");
+const xml2js = require("xml2js");
 exports.myTenant = "992d8d2f-5bb8-4131-9791-1f4b4a48e6d0";
 exports.myApplicationId = "9e6d8f78-eb08-40a6-b8ff-a9dcf9d2f038";
 function TokenFetch(tenant, applicationId) {
@@ -49,7 +50,20 @@ function getPolicy(token) {
     });
 }
 exports.getPolicy = getPolicy;
-TokenFetch(exports.myTenant, exports.myApplicationId).then((res) => {
-    getPolicy(res).then((res1) => { console.log(res1); });
+TokenFetch(exports.myTenant, exports.myApplicationId).then((token) => {
+    getPolicy(token).then((policy) => {
+        console.log(policy);
+        policy.text().then((policyXml) => {
+            console.log(policyXml);
+            const xmlParser = new xml2js.Parser();
+            xmlParser.parseString(policyXml, (err, result) => {
+                console.log(result.SyncFile.Content[0]);
+                const labelsArray = result.SyncFile.Content[0].labels[0].label;
+                labelsArray.forEach((element) => {
+                    console.log("Label: name: " + element.$.name + " id: " + element.$.id);
+                });
+            });
+        });
+    });
 });
 //# sourceMappingURL=token_fetch.js.map

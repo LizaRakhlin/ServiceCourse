@@ -3,6 +3,7 @@ import * as utils from "util";
 dotenv.config();
 
 import fetch = require("node-fetch");
+import xml2js = require("xml2js");
 
 export const myTenant = "992d8d2f-5bb8-4131-9791-1f4b4a48e6d0";
 export const myApplicationId = "9e6d8f78-eb08-40a6-b8ff-a9dcf9d2f038";
@@ -42,6 +43,18 @@ export async function getPolicy(token) {
     return response;
 }
 
-TokenFetch(myTenant, myApplicationId).then((res) => {
-    getPolicy(res).then((res1) => { console.log(res1); });
+// Print label names and id's from the policy
+TokenFetch(myTenant, myApplicationId).then((token) => {
+    getPolicy(token).then((policy) => {
+        policy.text().then((policyXml) => {
+            console.log(policyXml);
+            const xmlParser = new xml2js.Parser();
+            xmlParser.parseString(policyXml, (err, result) => {
+                const labelsArray = result.SyncFile.Content[0].labels[0].label;
+                labelsArray.forEach((element) => {
+                    console.log("Label: name: " + element.$.name + " id: " + element.$.id);
+                });
+            });
+        });
+    });
 });
