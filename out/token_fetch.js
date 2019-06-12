@@ -50,14 +50,41 @@ function getPolicy(token) {
     });
 }
 exports.getPolicy = getPolicy;
-TokenFetch(exports.myTenant, exports.myApplicationId).then((token) => {
+function getXmlObjFromPolicy(policy) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const policyXml = yield policy.text();
+        const xmlParser = new xml2js.Parser();
+        const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
+        const xmlObj = yield parseAsync(policyXml);
+        return xmlObj;
+    });
+}
+exports.getXmlObjFromPolicy = getXmlObjFromPolicy;
+exports.getLabelsFromXml = (xmlObj) => {
+    const labels = [];
+    xmlObj.SyncFile.Content[0].labels[0].label.forEach((el) => {
+        // labels.push([el.$.name, el.$.id]);
+        labels.push({ name: el.$.name, id: el.$.id });
+    });
+    return labels;
+};
+function getLabels(tenant, applicationId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const token = yield TokenFetch(tenant, applicationId);
+        const policy = yield getPolicy(token);
+        const xmlObj = yield getXmlObjFromPolicy(policy);
+        return exports.getLabelsFromXml(xmlObj);
+    });
+}
+exports.getLabels = getLabels;
+// Print label names and id's from the policy
+/*
+TokenFetch(myTenant, myApplicationId).then((token) => {
     getPolicy(token).then((policy) => {
-        console.log(policy);
         policy.text().then((policyXml) => {
             console.log(policyXml);
             const xmlParser = new xml2js.Parser();
             xmlParser.parseString(policyXml, (err, result) => {
-                console.log(result.SyncFile.Content[0]);
                 const labelsArray = result.SyncFile.Content[0].labels[0].label;
                 labelsArray.forEach((element) => {
                     console.log("Label: name: " + element.$.name + " id: " + element.$.id);
@@ -66,4 +93,7 @@ TokenFetch(exports.myTenant, exports.myApplicationId).then((token) => {
         });
     });
 });
+
+*/
+getLabels(exports.myTenant, exports.myApplicationId).then((labels) => console.log(labels));
 //# sourceMappingURL=token_fetch.js.map

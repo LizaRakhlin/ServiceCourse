@@ -43,18 +43,29 @@ export async function getPolicy(token) {
     return response;
 }
 
-// Print label names and id's from the policy
-TokenFetch(myTenant, myApplicationId).then((token) => {
-    getPolicy(token).then((policy) => {
-        policy.text().then((policyXml) => {
-            console.log(policyXml);
-            const xmlParser = new xml2js.Parser();
-            xmlParser.parseString(policyXml, (err, result) => {
-                const labelsArray = result.SyncFile.Content[0].labels[0].label;
-                labelsArray.forEach((element) => {
-                    console.log("Label: name: " + element.$.name + " id: " + element.$.id);
-                });
-            });
-        });
-    });
-});
+export async function getXmlObjFromPolicy(policy) {
+    const policyXml = await policy.text();
+    const xmlParser = new xml2js.Parser();
+
+    const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
+    const xmlObj = await parseAsync(policyXml);
+
+    return xmlObj;
+}
+
+export let getLabelsFromXml = ( xmlObj ) => {   const labels = [];
+                                                xmlObj.SyncFile.Content[0].labels[0].label.forEach((el) => {
+                                                    labels.push({name: el.$.name, id: el.$.id});
+                                                });
+
+                                                return labels;
+                                            };
+export async function getLabels(tenant: string, applicationId: string) {
+    const token = await TokenFetch(tenant, applicationId);
+    const policy = await getPolicy(token);
+
+    const xmlObj = await getXmlObjFromPolicy(policy);
+    return getLabelsFromXml(xmlObj);
+}
+
+//getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
