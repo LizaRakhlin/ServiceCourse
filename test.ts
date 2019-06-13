@@ -10,10 +10,13 @@ describe("TokenFetch liveliness", () => {
 		authenticationContextMock.expects('acquireTokenWithClientCredentials').once();
 
 		TokenFetch(myTenant, myApplicationId);
+		// TODO: nock http request inside TokenFetch by url 
 		authenticationContextMock.verify();		
 	});
 });
 
+
+// E2E
 describe("Get policy labels", () => {
 	it("Should return labels as expected", () => {
 		var expectedLabelId = 'cab4fc72-41fb-46e1-b2e8-520397b79446';
@@ -28,4 +31,4 @@ describe("Get policy labels", () => {
 		});
 			
 	})
-})
+});
