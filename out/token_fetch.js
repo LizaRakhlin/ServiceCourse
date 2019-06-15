@@ -30,6 +30,8 @@ function TokenFetch(tenant, applicationId) {
 }
 exports.TokenFetch = TokenFetch;
 function checkStatus(res) {
+    // DBG
+    console.log(res);
     if (res.status >= 200 && res.status < 300) {
         return res;
     }
@@ -46,6 +48,8 @@ function getPolicy(token) {
                 "Content-Type": "application/xml; charset=utf-8"
             }
         }).then(checkStatus);
+        // const policyJson = await response.json();
+        // console.log("JSON: \n" + policyJson);
         return response;
     });
 }
@@ -63,7 +67,6 @@ exports.getXmlObjFromPolicy = getXmlObjFromPolicy;
 exports.getLabelsFromXml = (xmlObj) => {
     const labels = [];
     xmlObj.SyncFile.Content[0].labels[0].label.forEach((el) => {
-        // labels.push([el.$.name, el.$.id]);
         labels.push({ name: el.$.name, id: el.$.id });
     });
     return labels;
@@ -77,23 +80,5 @@ function getLabels(tenant, applicationId) {
     });
 }
 exports.getLabels = getLabels;
-// Print label names and id's from the policy
-/*
-TokenFetch(myTenant, myApplicationId).then((token) => {
-    getPolicy(token).then((policy) => {
-        policy.text().then((policyXml) => {
-            console.log(policyXml);
-            const xmlParser = new xml2js.Parser();
-            xmlParser.parseString(policyXml, (err, result) => {
-                const labelsArray = result.SyncFile.Content[0].labels[0].label;
-                labelsArray.forEach((element) => {
-                    console.log("Label: name: " + element.$.name + " id: " + element.$.id);
-                });
-            });
-        });
-    });
-});
-
-*/
 getLabels(exports.myTenant, exports.myApplicationId).then((labels) => console.log(labels));
 //# sourceMappingURL=token_fetch.js.map

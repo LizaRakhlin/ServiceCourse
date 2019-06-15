@@ -8,6 +8,7 @@
     "test": "mocha -r ts-node/register test.ts"
   },
   "dependencies": {
+    "@azure/cosmos": "^2.1.5",
     "@types/mocha": "^5.2.7",
     "adal-node": "^0.1.28",
     "dotenv": "^8.0.0",

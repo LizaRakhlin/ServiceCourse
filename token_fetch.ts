@@ -23,8 +23,10 @@ export async function TokenFetch(tenant: string, applicationId: string) {
 }
 
 function checkStatus(res) {
-  if (res.status >= 200 && res.status < 300) {
-    return res;
+    // DBG
+    console.log(res);
+    if (res.status >= 200 && res.status < 300) {
+        return res;
   } else {
     const err = new Error(res.statusText);
     throw err;
@@ -40,6 +42,9 @@ export async function getPolicy(token) {
                               "Content-Type": "application/xml; charset=utf-8"
                             }
             }).then(checkStatus);
+
+    // const policyJson = await response.json();
+    // console.log("JSON: \n" + policyJson);
     return response;
 }
 
@@ -68,4 +73,4 @@ export async function getLabels(tenant: string, applicationId: string) {
     return getLabelsFromXml(xmlObj);
 }
 
-//getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
+getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
