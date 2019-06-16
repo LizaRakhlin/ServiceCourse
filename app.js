@@ -74,7 +74,14 @@ async function queryContainer() {
        let resultString = JSON.stringify(queryResult);
        console.log(`\tQuery returned ${resultString}\n`);
    }
-  };
+  }
+
+/**
+* Cleanup the database and container on completion
+*/
+async function cleanup() {
+    await client.database(databaseId).delete();
+  }
 
 function exit(message) {
     console.log(message);
@@ -84,14 +91,20 @@ function exit(message) {
     process.stdin.on('data', process.exit.bind(process, 0));
  }
 
+ function printError(err) {
+     return `Completed with error ${JSON.stringify(err)}`;
+ }
+
  createDatabase()
     .then(() => readDatabase())
     .then(() => createContainer())
     .then(() => readContainer())
+    //.then(() => createItem(config.items.TenantId))
     .then(() => createItem(config.items.Label1))
     .then(() => createItem(config.items.Label2))
     .then(() => createItem(config.items.Label3))
     .then(() => createItem(config.items.Label4))
     .then(() => queryContainer())
+    .then(() => cleanup())
     .then(() => { exit(`Completed successfully`); })
-    .catch((error) => { exit(`Completed with error ${JSON.stringify(error)}`) });
+    .catch((error) => { exit(printError(error)) });
