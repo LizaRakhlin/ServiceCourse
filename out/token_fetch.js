@@ -48,8 +48,6 @@ function getPolicy(token) {
                 "Content-Type": "application/xml; charset=utf-8"
             }
         }).then(checkStatus);
-        // const policyJson = await response.json();
-        // console.log("JSON: \n" + policyJson);
         return response;
     });
 }
@@ -58,6 +56,7 @@ function getXmlObjFromPolicy(policy) {
     return __awaiter(this, void 0, void 0, function* () {
         const policyXml = yield policy.text();
         const xmlParser = new xml2js.Parser();
+        console.log(policyXml);
         const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
         const xmlObj = yield parseAsync(policyXml);
         return xmlObj;

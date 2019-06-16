@@ -43,8 +43,6 @@ export async function getPolicy(token) {
                             }
             }).then(checkStatus);
 
-    // const policyJson = await response.json();
-    // console.log("JSON: \n" + policyJson);
     return response;
 }
 
@@ -52,6 +50,7 @@ export async function getXmlObjFromPolicy(policy) {
     const policyXml = await policy.text();
     const xmlParser = new xml2js.Parser();
 
+    console.log(policyXml);
     const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
     const xmlObj = await parseAsync(policyXml);
 
