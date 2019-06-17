@@ -5,5 +5,5 @@
         "outDir": "out",
         "sourceMap": true
     },
-    "files": ["token_fetch.ts"]
+    "files": ["token_fetch.ts", "index.ts"]
 }

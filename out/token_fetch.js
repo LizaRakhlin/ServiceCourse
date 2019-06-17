@@ -30,8 +30,6 @@ function TokenFetch(tenant, applicationId) {
 }
 exports.TokenFetch = TokenFetch;
 function checkStatus(res) {
-    // DBG
-    console.log(res);
     if (res.status >= 200 && res.status < 300) {
         return res;
     }
@@ -56,7 +54,6 @@ function getXmlObjFromPolicy(policy) {
     return __awaiter(this, void 0, void 0, function* () {
         const policyXml = yield policy.text();
         const xmlParser = new xml2js.Parser();
-        console.log(policyXml);
         const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
         const xmlObj = yield parseAsync(policyXml);
         return xmlObj;
@@ -79,5 +76,5 @@ function getLabels(tenant, applicationId) {
     });
 }
 exports.getLabels = getLabels;
-getLabels(exports.myTenant, exports.myApplicationId).then((labels) => console.log(labels));
+//getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
 //# sourceMappingURL=token_fetch.js.map

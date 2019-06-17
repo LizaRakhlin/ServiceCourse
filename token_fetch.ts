@@ -23,8 +23,6 @@ export async function TokenFetch(tenant: string, applicationId: string) {
 }
 
 function checkStatus(res) {
-    // DBG
-    console.log(res);
     if (res.status >= 200 && res.status < 300) {
         return res;
   } else {
@@ -50,7 +48,6 @@ export async function getXmlObjFromPolicy(policy) {
     const policyXml = await policy.text();
     const xmlParser = new xml2js.Parser();
 
-    console.log(policyXml);
     const parseAsync = utils.promisify(xmlParser.parseString).bind(xmlParser);
     const xmlObj = await parseAsync(policyXml);
 
@@ -72,4 +69,4 @@ export async function getLabels(tenant: string, applicationId: string) {
     return getLabelsFromXml(xmlObj);
 }
 
-getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
+//getLabels(myTenant, myApplicationId).then((labels) => console.log(labels));
